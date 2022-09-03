@@ -77,8 +77,6 @@ export function FormAddImage({ closeModal }: FormAddImageProps): JSX.Element {
   const { errors } = formState;
 
   const onSubmit = async (data: FormDataCreate): Promise<void> => {
-    console.log(data);
-
     try {
       if (!imageUrl) {
         toast({
