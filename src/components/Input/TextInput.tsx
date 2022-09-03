@@ -1,5 +1,5 @@
 import { forwardRef, ForwardRefRenderFunction } from 'react';
-import { FieldError } from 'react-hook-form';
+import { FieldErrors } from 'react-hook-form';
 import {
   FormControl,
   FormErrorMessage,
@@ -12,19 +12,21 @@ import { FiAlertCircle } from 'react-icons/fi';
 
 interface InputProps extends ChakraInputProps {
   name: string;
-  error?: FieldError;
+  error?: FieldErrors;
 }
 
 const TextInputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   { name, error = null, ...rest },
   ref
 ) => {
+  const hasError = !!error[name];
+
   return (
     <FormControl
       display="flex"
       flexDirection="row"
       alignItems="center"
-      isInvalid={!!error}
+      isInvalid={hasError}
     >
       <ChakraInput
         aria-label={name}
@@ -43,9 +45,8 @@ const TextInputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         pr={8}
         {...rest}
       />
-
-      {!!error && (
-        <Tooltip label={error.message} bg="red.500">
+      {hasError && (
+        <Tooltip label={error[name].message} bg="red.500">
           <FormErrorMessage ml={-6} mt={0} zIndex="tooltip">
             <Icon as={FiAlertCircle} color="red.500" w={4} h={4} />
           </FormErrorMessage>

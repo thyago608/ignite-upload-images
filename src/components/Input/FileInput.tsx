@@ -23,7 +23,7 @@ import {
   useEffect,
 } from 'react';
 import {
-  FieldError,
+  FieldErrors,
   FieldValues,
   UseFormSetError,
   UseFormTrigger,
@@ -33,7 +33,7 @@ import { api } from '../../services/api';
 
 export interface FileInputProps {
   name: string;
-  error?: FieldError;
+  error?: FieldErrors;
   setImageUrl: Dispatch<SetStateAction<string>>;
   localImageUrl: string;
   setLocalImageUrl: Dispatch<SetStateAction<string>>;
@@ -133,6 +133,8 @@ const FileInputBase: ForwardRefRenderFunction<
     }
   }, [cancelToken, error, isSending]);
 
+  const hasError = !!error[name];
+
   return (
     <FormControl isInvalid={!!error}>
       <FormLabel
@@ -162,8 +164,8 @@ const FileInputBase: ForwardRefRenderFunction<
             borderRadius="md"
             bgColor="pGray.800"
             color="pGray.200"
-            borderWidth={error?.message && 2}
-            borderColor={error?.message && 'red.500'}
+            borderWidth={hasError && 2}
+            borderColor={hasError && 'red.500'}
           >
             {isSending ? (
               <>
@@ -180,8 +182,8 @@ const FileInputBase: ForwardRefRenderFunction<
               </>
             ) : (
               <Box pos="relative" h="full">
-                {!!error && (
-                  <Tooltip label={error.message} bg="red.500">
+                {hasError && (
+                  <Tooltip label={error[name].message} bg="red.500">
                     <FormErrorMessage
                       pos="absolute"
                       right={2}

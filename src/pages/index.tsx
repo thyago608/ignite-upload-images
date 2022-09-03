@@ -30,22 +30,23 @@ export default function Home(): JSX.Element {
   } = useInfiniteQuery(
     ['images'],
     async ({ pageParam = null }) => {
-      const response = await api.get('images', {
+      const { data } = await api.get('/api/images', {
         params: { after: pageParam },
       });
-      return response.data;
+
+      return data;
     },
     {
-      getNextPageParam: lastPage => lastPage.nextCursor,
+      getNextPageParam: lastPage => lastPage?.after || null,
     }
   );
 
   const formattedData = useMemo(() => {
-    const pageList = data?.pages.map((page: PageProps) => {
-      return [...page.data];
+    const formatted = data?.pages.flatMap(imageData => {
+      return imageData.data.flat();
     });
 
-    return pageList?.flat();
+    return formatted;
   }, [data]);
 
   if (isLoading) {
